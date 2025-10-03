@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RoolF - Travel Adventures</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Lato', sans-serif;
+      background: #f9f9f9;
+      color: #333;
+    }
+    header {
+      background: #2c7a7b;
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      margin: 0;
+    }
+    nav a {
+      color: white;
+      margin-left: 1rem;
+      text-decoration: none;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    .hero {
+      background: url('images/hero-travel.jpg') center/cover no-repeat;
+      height: 60vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+      text-align: center;
+    }
+    .hero h2 {
+      font-size: 3rem;
+    }
+    main {
+      padding: 2rem;
+    }
+    .section-title {
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      color: #2c7a7b;
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      overflow: hidden;
+      transition: transform 0.2s;
+    }
+    .card:hover {
+      transform: scale(1.02);
+    }
+    .card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+    .card-content {
+      padding: 1rem;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background: #2c7a7b;
+      color: white;
+      margin-top: 2rem;
+    }
+  </style>
+  <script type="module">
+    // Import Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // Your Firebase config (replace with your own from Firebase Console)
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    // Init Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Load blog posts from Firestore
+    async function loadPosts() {
+      const postsCol = collection(db, "posts");
+      const postSnapshot = await getDocs(postsCol);
+      const postList = postSnapshot.docs.map(doc => doc.data());
+
+      const blogContainer = document.getElementById("blog-posts");
+      blogContainer.innerHTML = "";
+
+      postList.forEach(post => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <img src="${post.image}" alt="${post.title}">
+          <div class="card-content">
+            <h4>${post.title}</h4>
+            <p>${post.excerpt}</p>
+          </div>
+        `;
+        blogContainer.appendChild(card);
+      });
+    }
+
+    window.addEventListener("DOMContentLoaded", loadPosts);
+  </script>
+</head>
+<body>
+  <header>
+    <h1>RoolF Travel Adventures</h1>
+    <nav>
+      <a href="#explore">Explore</a>
+      <a href="index.html">Home</a>
+      <a href="blog.html">Blog</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="travell_blog_new.html">New Travel Blog</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h2>Discover. Share. Inspire.</h2>
+  </section>
+
+  <main>
+    <section id="explore">
+      <h3 class="section-title">Trending Destinations</h3>
+      <div class="card-grid">
+        <div class="card">
+          <img src="images/paris.jpg" alt="Paris">
+          <div class="card-content">
+            <h4>Paris, France</h4>
+            <p>Romantic city vibes, perfect for your next escape.</p>
+          </div>
+        </div>
+        <div class="card">
+          <img src="images/bali.jpg" alt="Bali">
+          <div class="card-content">
+            <h4>Bali, Indonesia</h4>
+            <p>Beaches, temples, and endless adventure.</p>
+          </div>
+        </div>
+        <div class="card">
+          <img src="images/tokyo.jpg" alt="Tokyo">
+          <div class="card-content">
+            <h4>Tokyo, Japan</h4>
+            <p>A mix of tradition, neon lights, and innovation.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="blog">
+      <h3 class="section-title">Latest Stories</h3>
+      <div id="blog-posts" class="card-grid">
+        <p>Loading posts...</p>
+      </div>
+    </section>
+
+    <section id="about">
+      <h3 class="section-title">About RoolF</h3>
+      <p>RoolF is a social platform for travelers to share experiences, discover hidden gems, and inspire new journeys. Start with stories and photos, and soon, plan trips, optimize routes, and access exclusive underground destinations.</p>
+    </section>
+
+    <section id="contact">
+      <h3 class="section-title">Contact Us</h3>
+      <p>Want to share feedback or join the early beta? Reach us at <a href="mailto:hello@roolf.com">hello@roolf.com</a>.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 RoolF. All rights reserved.</p>
+  </footer>
+</body>
+</html>
